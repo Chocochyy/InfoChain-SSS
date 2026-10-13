@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InfoChain — Public Information Network</title>
+  <style>
+    :root {
+      --navy: #10213e;
+      --blue: #2563eb;
+      --blue2: #1d4ed8;
+      --pale: #eff6ff;
+      --ink: #172033;
+      --muted: #64748b;
+      --line: #e5eaf2;
+      --bg: #f5f7fb;
+      --white: #fff;
+      --green: #15803d;
+      --amber: #b45309;
+      --red: #b91c1c;
+      --shadow: 0 12px 34px rgba(23, 42, 77, .08)
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink)
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer
+    }
+
+    .app {
+      min-height: 100vh
+    }
+
+    .topbar {
+      background: var(--navy);
+      color: white;
+      padding: 16px 22px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      box-shadow: 0 5px 18px #10213e22
+    }
+
+    .top-inner {
+      max-width: 1180px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      gap: 22px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 20px;
+      white-space: nowrap
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: #2f6df6;
+      display: grid;
+      place-items: center;
+      font-size: 21px
+    }
+
+    .tagline {
+      font-size: 12px;
+      color: #bdc9dd;
+      font-weight: 500;
+      margin-top: 2px
+    }
+
+    .search-wrap {
+      flex: 1;
+      position: relative
+    }
+
+    .search-wrap input {
+      width: 100%;
+      border: 1px solid #ffffff28;
+      background: #ffffff12;
+      color: white;
+      border-radius: 12px;
+      padding: 12px 14px 12px 40px;
+      outline: none
+    }
+
+    .search-wrap input::placeholder {
+      color: #c4cfe0
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 10px;
+      font-size: 18px
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .online-pill {
+      border: 1px solid #ffffff2b;
+      background: #ffffff10;
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      white-space: nowrap
+    }
+
+    .online-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #4ade80;
+      margin-right: 6px
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #dbeafe;
+      color: #1d4ed8;
+      font-weight: 800;
+      border: 0
+    }
+
+    .layout {
+      max-width: 1180px;
+      margin: 26px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr) 270px;
+      gap: 22px
+    }
+
+    .panel,
+    .card {
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow)
+    }
+
+    .sidebar {
+      padding: 14px;
+      height: max-content;
+      position: sticky;
+      top: 92px
+    }
+
+    .nav-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border: 0;
+      background: transparent;
+      color: #526079;
+      border-radius: 11px;
+      text-align: left;
+      margin: 2px 0;
+      font-weight: 650
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--pale);
+      color: var(--blue)
+    }
+
+    .nav-emoji {
+      width: 22px;
+      text-align: center
+    }
+
+    .side-sep {
+      height: 1px;
+      background: var(--line);
+      margin: 12px 0
+    }
+
+    .side-note {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 13px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5
+    }
+
+    .side-note strong {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+      margin-bottom: 5px
+    }
+
+    .main {
+      min-width: 0
+    }
+
+    .hero {
+      background: linear-gradient(120deg, #11284b, #1d4ed8);
+      border-radius: 20px;
+      padding: 24px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 18px
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 35px solid #ffffff0d;
+      border-radius: 50%;
+      right: -40px;
+      top: -85px
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      font-weight: 800;
+      color: #bfdbfe;
+      text-transform: uppercase
+    }
+
+    .hero h1 {
+      font-size: 27px;
+      line-height: 1.2;
+      margin: 9px 0
+    }
+
+    .hero p {
+      color: #dbeafe;
+      line-height: 1.55;
+      font-size: 14px;
+      max-width: 580px;
+      margin: 0 0 18px
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 11px 15px;
+      font-weight: 750;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white
+    }
+
+    .btn-primary:hover {
+      background: var(--blue2)
+    }
+
+    .hero .btn-primary {
+      background: white;
+      color: #1d4ed8
+    }
+
+    .btn-ghost {
+      background: #ffffff14;
+      color: white;
+      border: 1px solid #ffffff35
+    }
+
+    .btn-light {
+      background: #f1f5f9;
+      color: #334155
+    }
+
+    .btn-small {
+      padding: 8px 11px;
+      font-size: 12px
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px
+    }
+
+    .stat {
+      padding: 15px 16px
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .stat-num {
+      font-size: 24px;
+      font-weight: 850;
+      margin-top: 5px
+    }
+
+    .stat-foot {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 20px 0 12px
+    }
+
+    .section-head h2 {
+      font-size: 17px;
+      margin: 0
+    }
+
+    .section-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 12px
+    }
+
+    .filters {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 14px
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: 8px 11px;
+      color: #526079;
+      font-size: 12px;
+      font-weight: 700
+    }
+
+    .chip.active {
+      background: #eaf1ff;
+      color: var(--blue);
+      border-color: #c8d9ff
+    }
+
+    .feed {
+      display: grid;
+      gap: 12px
+    }
+
+    .info-card {
+      padding: 16px
+    }
+
+    .info-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px
+    }
+
+    .category-icon {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
+      display: grid;
+      place-items: center;
+      background: #eff6ff;
+      border-radius: 13px;
+      font-size: 22px
+    }
+
+    .info-title {
+      font-weight: 800;
+      font-size: 15px;
+      line-height: 1.35;
+      margin: 1px 0 5px
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 10px;
+      font-weight: 800;
+      background: #f1f5f9;
+      color: #475569
+    }
+
+    .badge.urgent {
+      background: #fee2e2;
+      color: #b91c1c
+    }
+
+    .badge.verified {
+      background: #dcfce7;
+      color: #166534
+    }
+
+    .badge.live {
+      background: #dbeafe;
+      color: #1d4ed8
+    }
+
+    .info-desc {
+      font-size: 13px;
+      color: #536176;
+      line-height: 1.55;
+      margin: 13px 0
+    }
+
+    .sss-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 10px
+    }
+
+    .sss-cell span {
+      display: block;
+      font-size: 10px;
+      color: #94a3b8;
+      font-weight: 800;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      margin-bottom: 4px
+    }
+
+    .sss-cell strong {
+      font-size: 11px;
+      line-height: 1.35;
+      display: block;
+      color: #334155
+    }
+
+    .info-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 12px
+    }
+
+    .source {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .empty {
+      padding: 35px;
+      text-align: center;
+      color: var(--muted)
+    }
+
+    .right-col {
+      display: grid;
+      gap: 14px;
+      align-content: start
+    }
+
+    .right-card {
+      padding: 17px
+    }
+
+    .right-card h3 {
+      font-size: 14px;
+      margin: 0 0 13px
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .profile-big {
+      width: 43px;
+      height: 43px;
+      border-radius: 50%;
+      background: #dbeafe;
+      color: #1d4ed8;
+      display: grid;
+      place-items: center;
+      font-weight: 850
+    }
+
+    .profile-mini strong {
+      font-size: 13px;
+      display: block
+    }
+
+    .profile-mini small {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .preference {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 11px;
+      margin-top: 11px;
+      font-size: 12px
+    }
+
+    .preference span {
+      color: var(--muted)
+    }
+
+    .presence-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin: 10px 0;
+      font-size: 12px
+    }
+
+    .presence-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e
+    }
+
+    .presence-row small {
+      display: block;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .tip {
+      background: #eff6ff;
+      color: #1e40af;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.5
+    }
+
+    .mobile-nav {
+      display: none
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: #0b1733a8;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      overflow: auto
+    }
+
+    .modal {
+      width: min(650px, 100%);
+      max-height: 92vh;
+      overflow: auto;
+      background: white;
+      border-radius: 20px;
+      padding: 23px;
+      box-shadow: 0 25px 90px #0003
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      align-items: flex-start;
+      margin-bottom: 18px
+    }
+
+    .modal-head h2 {
+      font-size: 21px;
+      margin: 0 0 5px
+    }
+
+    .modal-head p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .close {
+      border: 0;
+      background: #f1f5f9;
+      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      color: #475569
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .field.full {
+      grid-column: 1/-1
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #334155
+    }
+
+    .field small {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      border: 1px solid #d9e1ec;
+      border-radius: 10px;
+      padding: 11px 12px;
+      outline: none;
+      background: white;
+      color: var(--ink);
+      width: 100%
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #7aa5ff;
+      box-shadow: 0 0 0 3px #dbeafe
+    }
+
+    .field textarea {
+      min-height: 85px;
+      resize: vertical
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      margin-top: 20px
+    }
+
+    .notice {
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      line-height: 1.45;
+      margin-bottom: 12px
+    }
+
+    .notice.info {
+      background: #eff6ff;
+      color: #1d4ed8
+    }
+
+    .notice.error {
+      background: #fef2f2;
+      color: #b91c1c
+    }
+
+    .detail-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 12px 0
+    }
+
+    .detail-copy {
+      color: #526079;
+      font-size: 14px;
+      line-height: 1.65
+    }
+
+    .detail-sss {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin: 16px 0
+    }
+
+    .detail-sss h3 {
+      font-size: 13px;
+      margin: 0 0 12px
+    }
+
+    .detail-sss .sss-grid {
+      background: #f8fafc
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 40;
+      background: #122443;
+      color: white;
+      padding: 12px 16px;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      max-width: calc(100% - 30px)
+    }
+
+    .hidden {
+      display: none !important
+    }
+
+    .page-head {
+      margin-bottom: 17px
+    }
+
+    .page-head h1 {
+      font-size: 24px;
+      margin: 0 0 5px
+    }
+
+    .page-head p {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 0
+    }
+
+    .notification-item {
+      padding: 13px 0;
+      border-top: 1px solid var(--line);
+      display: flex;
+      gap: 10px
+    }
+
+    .notification-item:first-of-type {
+      border-top: 0
+    }
+
+    .notification-item .ni {
+      width: 36px;
+      height: 36px;
+      background: #eff6ff;
+      border-radius: 11px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 36px
+    }
+
+    .notification-item strong {
+      font-size: 13px;
+      display: block
+    }
+
+    .notification-item p {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--muted);
+      margin: 4px 0
+    }
+
+    .notification-item small {
+      font-size: 10px;
+      color: #94a3b8
+    }
+
+    .profile-form {
+      display: grid;
+      gap: 14px
+    }
+
+    .profile-save {
+      margin-top: 5px
+    }
+
+    .footnote {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin-top: 12px
+    }
+
+    @media(max-width:1000px) {
+      .layout {
+        grid-template-columns: 190px minmax(0, 1fr)
+      }
+
+      .right-col {
+        grid-column: 2;
+        grid-template-columns: 1fr 1fr
+      }
+
+      .top-inner {
+        gap: 12px
+      }
+
+      .online-pill {
+        display: none
+      }
+    }
+
+    @media(max-width:680px) {
+      .topbar {
+        padding: 12px
+      }
+
+      .top-inner {
+        flex-wrap: wrap;
+        gap: 10px
+      }
+
+      .brand {
+        font-size: 17px
+      }
+
+      .brand-mark {
+        width: 34px;
+        height: 34px
+      }
+
+      .search-wrap {
+        order: 3;
+        flex-basis: 100%
+      }
+
+      .top-right {
+        margin-left: auto
+      }
+
+      .layout {
+        display: block;
+        padding: 0 12px;
+        margin: 14px auto 82px
+      }
+
+      .sidebar {
+        display: none
+      }
+
+      .hero {
+        padding: 20px;
+        border-radius: 16px
+      }
+
+      .hero h1 {
+        font-size: 24px
+      }
+
+      .stats {
+        gap: 8px
+      }
+
+      .stat {
+        padding: 12px
+      }
+
+      .stat-num {
+        font-size: 21px
+      }
+
+      .stat-foot {
+        display: none
+      }
+
+      .right-col {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 16px
+      }
+
+      .sss-grid {
+        gap: 5px;
+        padding: 8px
+      }
+
+      .sss-cell strong {
+        font-size: 10px
+      }
+
+      .info-card {
+        padding: 13px
+      }
+
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 8;
+        background: #fff;
+        border-top: 1px solid var(--line);
+        padding: 7px 5px calc(7px + env(safe-area-inset-bottom));
+        justify-content: space-around
+      }
+
+      .mobile-nav button {
+        border: 0;
+        background: transparent;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 750;
+        display: grid;
+        gap: 3px;
+        justify-items: center;
+        min-width: 55px
+      }
+
+      .mobile-nav button span {
+        font-size: 19px
+      }
+
+      .mobile-nav button.active {
+        color: var(--blue)
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr
+      }
+
+      .field.full {
+        grid-column: auto
+      }
+
+      .modal {
+        padding: 18px
+      }
+
+      .overlay {
+        padding: 10px
+      }
+
+      .section-head {
+        align-items: flex-start
+      }
+
+      .section-head .btn {
+        font-size: 11px;
+        padding: 9px
+      }
+
+      .info-bottom {
+        align-items: flex-start
+      }
+
+      .top-right .avatar {
+        width: 32px;
+        height: 32px
+      }
+    }
+
+
+    /* Phone-like app preview on desktop; full mobile layout on narrow screens */
+    @media(min-width:681px) {
+      body {
+        background: #0b1020;
+        padding: 24px 0 40px
+      }
+
+      .topbar {
+        position: relative;
+        top: auto;
+        background: #050b1b;
+        padding: 0;
+        box-shadow: none;
+        width: min(430px, calc(100% - 32px));
+        margin: 0 auto
+      }
+
+      .top-inner {
+        width: 100%;
+        max-width: 430px;
+        height: 58px;
+        padding: 0 16px;
+        gap: 10px
+      }
+
+      .brand {
+        font-size: 14px;
+        gap: 8px
+      }
+
+      .brand-mark {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        font-size: 17px
+      }
+
+      .tagline {
+        display: none
+      }
+
+      .search-wrap {
+        display: block;
+        order: 3;
+        flex-basis: 100%;
+        margin: 0 12px 10px
+      }
+
+      .top-inner {
+        height: auto;
+        min-height: 58px;
+        flex-wrap: wrap;
+        padding: 10px 12px 0
+      }
+
+      .search-wrap input {
+        background: #ffffff12;
+        border: 1px solid #ffffff35;
+        color: #fff;
+        border-radius: 11px;
+        padding: 10px 12px 10px 36px;
+        font-size: 12px
+      }
+
+      .search-wrap input::placeholder {
+        color: #c4cfe0
+      }
+
+      .search-icon {
+        left: 12px;
+        top: 7px;
+        font-size: 17px
+      }
+
+      .top-right {
+        margin-left: auto
+      }
+
+      .online-pill {
+        font-size: 10px;
+        padding: 6px 8px
+      }
+
+      .avatar {
+        width: 30px;
+        height: 30px
+      }
+
+      .layout {
+        display: block;
+        width: min(430px, calc(100% - 32px));
+        max-width: 430px;
+        margin: 0 auto;
+        padding: 0;
+        background: #f8fafc;
+        min-height: calc(100vh - 106px);
+        border-radius: 0 0 30px 30px;
+        overflow: hidden;
+        box-shadow: 0 20px 70px #0007
+      }
+
+      .sidebar,
+      .right-col {
+        display: none
+      }
+
+      .main {
+        min-width: 0
+      }
+
+      .hero {
+        border-radius: 0 0 26px 26px;
+        padding: 20px 18px;
+        margin-bottom: 14px
+      }
+
+      .hero h1 {
+        font-size: 23px
+      }
+
+      .hero p {
+        font-size: 13px
+      }
+
+      .stats {
+        padding: 0 12px;
+        gap: 7px;
+        margin-bottom: 16px
+      }
+
+      .stat {
+        padding: 11px;
+        border-radius: 14px
+      }
+
+      .stat-num {
+        font-size: 20px
+      }
+
+      .stat-label {
+        font-size: 10px
+      }
+
+      .stat-foot {
+        display: none
+      }
+
+      .section-head,
+      .filters,
+      .feed,
+      .page-head {
+        margin-left: 12px;
+        margin-right: 12px
+      }
+
+      .section-head {
+        margin-top: 17px
+      }
+
+      .section-head h2 {
+        font-size: 15px
+      }
+
+      .section-head p {
+        font-size: 11px
+      }
+
+      .section-head .btn {
+        font-size: 11px;
+        padding: 9px
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 5px;
+        scrollbar-width: none
+      }
+
+      .filters::-webkit-scrollbar {
+        display: none
+      }
+
+      .chip {
+        white-space: nowrap;
+        flex: 0 0 auto;
+        padding: 8px 10px
+      }
+
+      .feed {
+        padding-bottom: 78px
+      }
+
+      .info-card {
+        border-radius: 15px;
+        padding: 13px
+      }
+
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: min(430px, calc(100% - 32px));
+        z-index: 15;
+        background: #fff;
+        border-top: 1px solid var(--line);
+        padding: 8px 5px 10px;
+        justify-content: space-around;
+        box-shadow: 0 -5px 18px #10213e10;
+        border-radius: 0 0 30px 30px;
+        margin: 0
+      }
+
+      .mobile-nav button {
+        border: 0;
+        background: transparent;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 750;
+        display: grid;
+        gap: 3px;
+        justify-items: center;
+        min-width: 58px;
+        padding: 4px 8px;
+        border-radius: 10px
+      }
+
+      .mobile-nav button span {
+        font-size: 19px;
+        line-height: 1.1
+      }
+
+      .mobile-nav button.active {
+        color: var(--blue);
+        background: #eff6ff
+      }
+
+      .modal .form-grid {
+        grid-template-columns: 1fr
+      }
+    }
+
+    @media(max-width:680px) {
+      body {
+        background: var(--bg);
+        padding: 0
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+  <script>
+    // Firebase Realtime Database connection for the InfoChain web prototype.
+    const firebaseConfig = {
+      apiKey: "AIzaSyACEYSnecGvnVPe10FKKJwcHtI5iBUfY98",
+      authDomain: "infochain-d7ec7.firebaseapp.com",
+      databaseURL: "https://infochain-d7ec7-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "infochain-d7ec7",
+      storageBucket: "infochain-d7ec7.firebasestorage.app",
+      messagingSenderId: "759193797181",
+      appId: "1:759193797181:web:2123e3a7702ad533e36054"
+    };
+    let db = null;
+    let firebaseReady = false;
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      firebaseReady = true;
+    } catch (err) {
+      console.error("Firebase initialization failed:", err);
+    }
+  </script>
+  <script>
+    const seed = [
+      { id: "i1", title: "Road closure on Merdeka Street", category: "Road Closure", icon: "🚧", location: "Merdeka Street, Cikarang", start: todayAt(9), end: todayAt(17), audience: "Drivers and commuters", description: "The road is temporarily closed for maintenance. Please allow extra travel time and follow on-site signs.", source: "Local community report", status: "Active", urgent: true, verified: false, created: Date.now() - 1000 * 60 * 18 },
+      { id: "i2", title: "Flooding near the Old Market", category: "Flood & Weather", icon: "🌧️", location: "Old Market, Cikarang", start: todayAt(7), end: todayAt(20), audience: "Residents and pedestrians nearby", description: "Water is covering part of the street after heavy rain. Avoid the low-lying section if possible.", source: "Community report", status: "Active", urgent: true, verified: false, created: Date.now() - 1000 * 60 * 42 },
+      { id: "i3", title: "Road maintenance in progress", category: "Road Maintenance", icon: "🛠️", location: "Jababeka Boulevard", start: todayAt(8), end: todayAt(18), audience: "Drivers and public transport users", description: "One lane is being repaired. Traffic may move slowly during working hours.", source: "Public works notice", status: "Active", urgent: false, verified: true, created: Date.now() - 1000 * 60 * 90 },
+      { id: "i4", title: "Community health event", category: "Public Event", icon: "🎪", location: "Cikarang Community Hall", start: todayAt(10), end: todayAt(15), audience: "Local residents", description: "A free community health information event is taking place today. Check with the organizer for availability.", source: "Organizer announcement", status: "Active", urgent: false, verified: true, created: Date.now() - 1000 * 60 * 130 },
+      { id: "i5", title: "Minor traffic accident reported", category: "Accident", icon: "🚑", location: "Near the east entrance, Jababeka", start: todayAt(8), end: todayAt(12), audience: "Drivers passing the east entrance", description: "Traffic is moving slowly near the entrance. Please drive carefully and follow instructions from authorities.", source: "Community report", status: "Active", urgent: true, verified: false, created: Date.now() - 1000 * 60 * 160 }
+    ];
+    function todayAt(h) { let d = new Date(); d.setHours(h, 0, 0, 0); return d.toISOString().slice(0, 16) }
+    const categories = [["All", "🌐"], ["Road Closure", "🚧"], ["Flood & Weather", "🌧️"], ["Accident", "🚑"], ["Road Maintenance", "🛠️"], ["Public Event", "🎪"], ["Emergency", "🆘"]];
+    const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+    const dt = s => s ? new Date(s).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Not set";
+    function load(key, fallback) { try { let x = localStorage.getItem(key); return x ? JSON.parse(x) : fallback } catch (e) { return fallback } }
+    let infos = load("ic_infos_v2", seed), profile = load("ic_profile_v2", { name: "Guest User", location: "Cikarang", categories: ["Road Closure", "Flood & Weather", "Accident"], timePreference: "Any time" }), page = "Home", filter = "All", query = "", modal = null, selected = null, toastTimer;
+    function saveInfos() {
+      localStorage.setItem("ic_infos_v2", JSON.stringify(infos));
+      if (db) {
+        const payload = {};
+        infos.forEach(item => { payload[item.id] = item; });
+        return db.ref("infos").set(payload).catch(err => {
+          console.error("Firebase save failed:", err);
+          notify("Firebase gagal menyimpan. Periksa koneksi dan Rules.");
+          throw err;
+        });
+      }
+      return Promise.resolve();
+    }
+    function saveProfile() { localStorage.setItem("ic_profile_v2", JSON.stringify(profile)) }
+    if (!profile.timePreference) profile.timePreference = "Any time";
+    function active(i) { return new Date(i.start).getTime() <= Date.now() && new Date(i.end).getTime() >= Date.now() }
+    function relevant(i) { let loc = (profile.location || "").toLowerCase(); return (!loc || i.location.toLowerCase().includes(loc) || i.location.toLowerCase().includes("anywhere")) && (!profile.categories?.length || profile.categories.includes(i.category)) && active(i) }
+    function notify(msg) { let t = document.getElementById("toast"); if (!t) return; t.textContent = msg; t.classList.remove("hidden"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.add("hidden"), 2600) }
+    function go(p) { page = p; modal = null; render() }
+    function navBtn(p, icon, label) { return `<button class="nav-btn ${page === p ? "active" : ""}" onclick="go('${p}')"><span class="nav-emoji">${icon}</span>${label}${p === "Notifications" && infos.filter(relevant).length ? `<span style="margin-left:auto;background:#dbeafe;color:#1d4ed8;border-radius:99px;padding:2px 7px;font-size:10px">${infos.filter(relevant).length}</span>` : ""}</button>` }
+    function card(i) { return `<article class="card info-card"><div class="info-top"><div class="category-icon">${i.icon || "📌"}</div><div style="min-width:0;flex:1"><div class="info-title">${esc(i.title)}</div><div class="meta"><span>📍 ${esc(i.location)}</span><span>•</span><span>${esc(i.category)}</span></div></div></div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">${i.urgent ? '<span class="badge urgent">⚠ Urgent</span>' : ""}${i.verified ? '<span class="badge verified">✓ Source checked</span>' : '<span class="badge">Community report</span>'}<span class="badge live">● ${active(i) ? "Active now" : "Expired"}</span></div><p class="info-desc">${esc(i.description)}</p><div class="sss-grid"><div class="sss-cell"><span>Somebody</span><strong>${esc(i.audience)}</strong></div><div class="sss-cell"><span>Somewhere</span><strong>${esc(i.location)}</strong></div><div class="sss-cell"><span>Right time</span><strong>${dt(i.start)} – ${new Date(i.end).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</strong></div></div><div class="info-bottom"><span class="source">Source: ${esc(i.source || "Community")}</span><button class="btn btn-light btn-small" onclick="openDetail('${i.id}')">View details →</button></div></article>` }
+    function filteredInfos() { return infos.filter(i => { let q = query.toLowerCase(); return (filter === "All" || i.category === filter) && (!q || [i.title, i.category, i.location, i.description, i.audience].join(" ").toLowerCase().includes(q)) }) }
+    function homePage() { let arr = filteredInfos().sort((a, b) => b.created - a.created); return `<section class="hero"><div class="eyebrow">Somebody · Somewhere · Right Time</div><h1>The right information.<br>For the right people, at the right time.</h1><p>InfoChain connects public information with the people who need it, in the places and time it matters. Share a useful update or discover what is happening around you.</p><div class="hero-actions"><button class="btn btn-primary" onclick="openAdd()">＋ Share information</button><button class="btn btn-ghost" onclick="go('Explore')">Explore updates →</button></div></section><div class="stats"><div class="card stat"><div class="stat-label">Public updates</div><div class="stat-num">${infos.length}</div><div class="stat-foot">Across all categories</div></div><div class="card stat"><div class="stat-label">Active now</div><div class="stat-num">${infos.filter(active).length}</div><div class="stat-foot">Within the time window</div></div><div class="card stat"><div class="stat-label">Relevant to you</div><div class="stat-num">${infos.filter(relevant).length}</div><div class="stat-foot">Based on your preferences</div></div></div><div class="section-head"><div><h2>Latest public information</h2><p>Updates from the community and public sources</p></div></div><div class="filters">${categories.map(([c, ic]) => `<button class="chip ${filter === c ? "active" : ""}" onclick="setFilter('${c}')">${ic} ${c}</button>`).join("")}</div><div class="feed">${arr.length ? arr.map(card).join("") : '<div class="card empty">No information matches your search. Try another keyword or category.</div>'}</div>` }
+    function explorePage() { return `<div class="page-head"><h1>Explore information</h1><p>Search updates by keyword, category, or location.</p></div><div class="filters">${categories.map(([c, ic]) => `<button class="chip ${filter === c ? "active" : ""}" onclick="setFilter('${c}')">${ic} ${c}</button>`).join("")}</div><div class="feed">${filteredInfos().sort((a, b) => b.created - a.created).map(card).join("") || '<div class="card empty">No matching information found.</div>'}</div>` }
+    function notificationsPage() { let loc = (profile.location || "").trim().toLowerCase(); let selectedCats = profile.categories || []; let arr = infos.filter(i => { let locationMatch = !loc || i.location.toLowerCase().includes(loc) || loc.includes(i.location.toLowerCase()); let categoryMatch = !selectedCats.length || selectedCats.includes(i.category); return locationMatch && categoryMatch }).sort((a, b) => b.created - a.created); return `<div class="page-head"><h1>Notifications</h1><p>Updates matching your saved location and selected categories.</p></div><div class="card right-card"><div class="notice info">Tap any update to open its details. This in-app list matches your saved location and categories. Automatic push notifications are not enabled yet.</div>${arr.length ? arr.map(i => `<div class="notification-item" style="cursor:pointer" onclick="openDetail('${i.id}')"><div class="ni">${i.icon || "🔔"}</div><div style="flex:1"><strong>${esc(i.title)}</strong><p>${esc(i.location)} · ${esc(i.category)}</p><small>${dt(i.start)} · ${active(i) ? "Active now" : "Expired / outside active time"}</small><div style="margin-top:8px;display:flex;gap:7px;align-items:center;flex-wrap:wrap">${active(i) ? '<span class="badge live">Active now</span>' : '<span class="badge">Expired</span>'}<button class="btn btn-light btn-small" type="button" onclick="event.stopPropagation();openDetail('${i.id}')">View update →</button></div></div></div>`).join("") : '<div class="empty">No updates match your saved location and categories. Try changing your Profile preferences or add a sample update for your area.</div>'}</div>` }
+    function profilePage() { let mine = infos.filter(i => i.author && i.author === profile.name).sort((a, b) => b.created - a.created); return `<div class="page-head"><h1>Your profile & SSS preferences</h1><p>Choose which public updates are relevant to you.</p></div><div class="card right-card"><div class="profile-mini" style="margin-bottom:20px"><div class="profile-big">${esc((profile.name || "G").slice(0, 1).toUpperCase())}</div><div><strong>${esc(profile.name || "Guest User")}</strong><small>Information receiver & provider</small></div></div><form class="profile-form" onsubmit="saveProfileForm(event)"><div class="field"><label for="pname">Display name</label><input id="pname" name="name" value="${esc(profile.name)}" maxlength="60" required><small>This name is shown when you share new information.</small></div><div class="field"><label for="plocation">Preferred location / area</label><input id="plocation" name="location" value="${esc(profile.location)}" placeholder="e.g. Cikarang" required><small>Used to match information by area. GPS is not enabled.</small></div><div class="field"><label for="ptime">Preferred time</label><select id="ptime" name="timePreference"><option ${profile.timePreference === "Any time" ? "selected" : ""}>Any time</option><option ${profile.timePreference === "Morning (06:00–12:00)" ? "selected" : ""}>Morning (06:00–12:00)</option><option ${profile.timePreference === "Afternoon (12:00–18:00)" ? "selected" : ""}>Afternoon (12:00–18:00)</option><option ${profile.timePreference === "Evening (18:00–00:00)" ? "selected" : ""}>Evening (18:00–00:00)</option></select><small>Choose when updates are most useful to you. Each update still shows its own start and expiry time.</small></div><div class="field"><label>Information categories you want to receive</label>${categories.slice(1).map(([c, ic]) => `<label style="display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600"><input type="checkbox" name="pcat" value="${c}" ${profile.categories.includes(c) ? "checked" : ""} style="width:auto"> ${ic} ${c}</label>`).join("")}</div><button class="btn btn-primary profile-save" type="submit">Save preferences</button></form><div class="footnote">Preferences are stored in this browser only. Firebase sync and account sign-in are not connected yet.</div></div><div class="card right-card" style="margin-top:14px"><h3>Your contributions</h3><p class="muted" style="font-size:13px;margin:5px 0 12px">Information you shared from this browser.</p>${mine.length ? mine.map(i => `<div class="notification-item" style="cursor:pointer" onclick="openDetail('${i.id}')"><div class="ni">${i.icon || "📌"}</div><div style="flex:1"><strong>${esc(i.title)}</strong><p>${esc(i.location)} · ${esc(i.category)}</p><small>${active(i) ? "Active now" : "Expired / outside active time"}</small></div></div>`).join("") : '<div class="empty" style="padding:18px 8px">You have not shared any information in this browser yet. Use “Share information” on Home to publish your first update.</div>'}</div><div class="card right-card" style="margin-top:14px"><h3>How SSS works</h3><div class="sss-grid"><div class="sss-cell"><span>Somebody</span><strong>Who needs it?</strong></div><div class="sss-cell"><span>Somewhere</span><strong>${esc(profile.location || "Your area")}</strong></div><div class="sss-cell"><span>Right time</span><strong>${esc(profile.timePreference || "Any time")}</strong></div></div></div>` } function rightCol() { return `<aside class="right-col"><div class="card right-card"><h3>Your SSS profile</h3><div class="profile-mini"><div class="profile-big">${esc((profile.name || "G").slice(0, 1).toUpperCase())}</div><div><strong>${esc(profile.name || "Guest User")}</strong><small>Information receiver & provider</small></div></div><div class="preference"><span>Preferred area</span><strong>${esc(profile.location || "Not set")}</strong></div><div class="preference"><span>Selected categories</span><strong>${profile.categories.length}</strong></div><button class="btn btn-light btn-small" style="width:100%;margin-top:13px" onclick="go('Profile')">Edit preferences</button></div><div class="card right-card"><h3>Community presence</h3><div class="presence-row"><span class="presence-dot"></span><div><strong>Demo session active</strong><small>Presence is illustrative in this prototype</small></div></div><div class="tip">Online-user counts will become real after user identity and Firebase Presence are connected. This demo does not track other people.</div></div><div class="card right-card"><h3>SSS checklist</h3><div class="presence-row"><span>✓</span><div>Somebody<small>Who should receive the update?</small></div></div><div class="presence-row"><span>✓</span><div>Somewhere<small>Where is it relevant?</small></div></div><div class="presence-row"><span>✓</span><div>Right time<small>When does it start and expire?</small></div></div></div></aside>` }
+    function shell() { return `<header class="topbar"><div class="top-inner"><div class="brand"><div class="brand-mark">⛓</div><div>InfoChain<div class="tagline">Public information network</div></div></div><div class="search-wrap"><span class="search-icon">⌕</span><input aria-label="Search information" placeholder="Search updates, categories, or locations..." value="${esc(query)}" oninput="setQuery(this.value)"></div><div class="top-right"><div class="online-pill"><span class="online-dot"></span>Demo mode</div><button class="avatar" aria-label="Open profile" onclick="go('Profile')">${esc((profile.name || "G").slice(0, 1).toUpperCase())}</button></div></div></header><div class="layout"><aside class="panel sidebar">${navBtn("Home", "⌂", "Home")}${navBtn("Explore", "⌕", "Explore")}${navBtn("Notifications", "♧", "Notifications")}${navBtn("Profile", "◉", "Profile")}<div class="side-sep"></div><div class="side-note"><strong>Information should arrive when it matters.</strong>InfoChain applies the SSS idea: the right person, the right place, and the right time.</div></aside><main class="main">${page === "Home" ? homePage() : page === "Explore" ? explorePage() : page === "Notifications" ? notificationsPage() : profilePage()}</main>${rightCol()}</div><nav class="mobile-nav"><button class="${page === "Home" ? "active" : ""}" onclick="go('Home')"><span>⌂</span>Home</button><button class="${page === "Explore" ? "active" : ""}" onclick="go('Explore')"><span>⌕</span>Explore</button><button class="${page === "Notifications" ? "active" : ""}" onclick="go('Notifications')"><span>♧</span>Alerts</button><button class="${page === "Profile" ? "active" : ""}" onclick="go('Profile')"><span>◉</span>Profile</button></nav>` }
+    function addModal() { return `<div class="overlay" onclick="if(event.target===this)closeModal()"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="add-title"><div class="modal-head"><div><h2 id="add-title">Share public information</h2><p>Complete the SSS fields so the right people can understand when and where this matters.</p></div><button class="close" onclick="closeModal()" aria-label="Close">×</button></div><div class="notice info">Avoid posting private personal information. Only share updates you have a reasonable basis to report.</div><form id="addForm" onsubmit="addInfo(event)"><div class="form-grid"><div class="field full"><label for="title">Information title *</label><input id="title" name="title" required maxlength="100" placeholder="e.g. Temporary road closure on Merdeka Street"></div><div class="field"><label for="category">Category *</label><select id="category" name="category" required>${categories.slice(1).map(([c]) => `<option>${c}</option>`).join("")}</select></div><div class="field"><label for="audience">Somebody — who needs this? *</label><input id="audience" name="audience" required maxlength="120" placeholder="e.g. Drivers and commuters"></div><div class="field full"><label for="location">Somewhere — location / context *</label><input id="location" name="location" required maxlength="140" placeholder="e.g. Merdeka Street, Cikarang"><small>Use a clear place name. This prototype does not use GPS.</small></div><div class="field"><label for="start">Starts at *</label><input type="datetime-local" id="start" name="start" required value="${todayAt(new Date().getHours())}"></div><div class="field"><label for="end">Expires at *</label><input type="datetime-local" id="end" name="end" required value="${todayAt(Math.min(23, new Date().getHours() + 2))}"></div><div class="field full"><label for="description">What happened / what should people know? *</label><textarea id="description" name="description" required maxlength="700" placeholder="Describe the situation, impact, and any safe action people should take."></textarea></div><div class="field"><label for="source">Source *</label><select id="source" name="source"><option>Community report</option><option>Official public notice</option><option>Organizer announcement</option><option>Public works notice</option><option>Weather authority</option></select></div><div class="field"><label for="urgency">Priority</label><select id="urgency" name="urgency"><option value="normal">Normal</option><option value="urgent">Urgent — needs attention</option></select></div></div><div class="form-actions"><button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Publish information</button></div></form></section></div>` }
+    function detailModal(i) { return `<div class="overlay" onclick="if(event.target===this)closeModal()"><section class="modal" role="dialog" aria-modal="true"><div class="modal-head"><div><h2>${esc(i.title)}</h2><p>${esc(i.category)} · Shared by ${esc(i.source || "Community")}</p></div><button class="close" onclick="closeModal()">×</button></div><div class="detail-meta">${i.urgent ? '<span class="badge urgent">⚠ Urgent</span>' : ""}${i.verified ? '<span class="badge verified">✓ Source checked</span>' : '<span class="badge">Not independently verified</span>'}<span class="badge ${active(i) ? "live" : ""}">${active(i) ? "Active now" : "Outside active time"}</span></div><p class="detail-copy">${esc(i.description)}</p><div class="detail-sss"><h3>SSS relevance</h3><div class="sss-grid"><div class="sss-cell"><span>Somebody</span><strong>${esc(i.audience)}</strong></div><div class="sss-cell"><span>Somewhere</span><strong>${esc(i.location)}</strong></div><div class="sss-cell"><span>Right time</span><strong>${dt(i.start)} – ${dt(i.end)}</strong></div></div></div><p class="detail-copy"><strong>Source:</strong> ${esc(i.source || "Community report")}<br><strong>Reminder:</strong> Community reports may be unverified. Check official sources before making safety-critical decisions.</p><div class="form-actions"><button class="btn btn-light" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="notify('Update saved in this browser prototype');closeModal()">Save update</button></div></section></div>` }
+    function openAdd() { modal = "add"; render() } function openDetail(id) { selected = infos.find(i => i.id === id); modal = "detail"; render() } function closeModal() { modal = null; render() } function setFilter(v) { filter = v; page = page === "Explore" ? "Explore" : "Home"; render() } function setQuery(v) { query = v; let pos = document.querySelector(".search-wrap input")?.selectionStart; render(); let inp = document.querySelector(".search-wrap input"); if (inp) { inp.focus(); inp.setSelectionRange(pos, pos) } }
+    function addInfo(e) { e.preventDefault(); let f = new FormData(e.target), start = f.get("start"), end = f.get("end"); if (new Date(end) <= new Date(start)) { alert("Expiry time must be after the start time."); return } let cat = f.get("category"), icons = { "Road Closure": "🚧", "Flood & Weather": "🌧️", "Accident": "🚑", "Road Maintenance": "🛠️", "Public Event": "🎪", "Emergency": "🆘" }; let item = { id: "i" + Date.now(), title: f.get("title").trim(), category: cat, icon: icons[cat] || "📌", location: f.get("location").trim(), start, end, audience: f.get("audience").trim(), description: f.get("description").trim(), source: f.get("source"), author: profile.name || "Guest User", status: "Active", urgent: f.get("urgency") === "urgent", verified: f.get("source") === "Official public notice" || f.get("source") === "Public works notice", created: Date.now() }; infos.unshift(item); filter = "All"; query = ""; page = "Home"; modal = null; render();
+      saveInfos().then(() => notify(db ? "Information saved to Firebase." : "Information saved in this browser only."))
+        .catch(() => notify("Belum tersimpan ke Firebase. Periksa koneksi/Rules."));
+    }
+    function saveProfileForm(e) { e.preventDefault(); let f = new FormData(e.target); profile.name = f.get("name").trim(); profile.location = f.get("location").trim(); profile.categories = f.getAll("pcat"); profile.timePreference = f.get("timePreference") || "Any time"; saveProfile(); render(); notify("Preferences saved in this browser.") }
+    function render() { document.getElementById("root").innerHTML = shell() + (modal === "add" ? addModal() : modal === "detail" && selected ? detailModal(selected) : "") + `<div id="toast" class="toast hidden" role="status"></div>` }
+    render();
+
+    // Listen for shared updates from Firebase so changes appear across browsers.
+    if (db) {
+      db.ref("infos").on("value", snapshot => {
+        const data = snapshot.val();
+        if (data && typeof data === "object") {
+          infos = Object.values(data).filter(Boolean).sort((a, b) => (b.created || 0) - (a.created || 0));
+          localStorage.setItem("ic_infos_v2", JSON.stringify(infos));
+          render();
+        } else if (!data) {
+          // First run: seed the database with the sample information already shown in the demo.
+          const payload = {};
+          seed.forEach(item => { payload[item.id] = item; });
+          db.ref("infos").set(payload).catch(err => {
+            console.error("Firebase seed failed:", err);
+            notify("Firebase belum bisa diakses. Periksa Database Rules.");
+          });
+        }
+      }, err => {
+        console.error("Firebase read failed:", err);
+        notify("Firebase gagal dibaca. Periksa Database Rules.");
+      });
+    }
+  </script>
+</body>
+
+</html>
