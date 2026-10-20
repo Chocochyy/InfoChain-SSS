@@ -32,7 +32,7 @@ Write-Host "========================================================" -Foregroun
 
 $baseFolder = $PSScriptRoot
 
-while ($listener.IsListening) {
+while ($listener.IsListening) {}
     try {
         $context = $listener.GetContext()
         $request = $context.Request
